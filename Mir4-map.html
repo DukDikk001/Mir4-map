@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>MIR4 Map</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      display: flex;
+      height: 100vh;
+      background: #000;
+      color: #fff;
+    }
+
+    /* Sidebar ซ้าย */
+    #sidebar {
+      width: 360px;
+      background: #1c1c1c;
+      padding: 20px;
+      overflow-y: auto;
+      border-right: 2px solid #333;
+    }
+
+    .map-name, .submap-name {
+      background: #2b2b2b;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .map-name:hover, .submap-name:hover {
+      background: #444;
+    }
+
+    .submaps {
+      margin-left: 15px;
+      margin-bottom: 10px;
+    }
+
+    /* ส่วนแสดงรูปใหญ่ด้านขวา */
+    #map-display {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #111;
+      overflow: auto;
+      padding: 20px;
+    }
+
+    #map-display img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 6px;
+    }
+
+    .filename {
+      text-align: center;
+      margin-top: 10px;
+      color: #00ffbf;
+      font-size: 0.9em;
+    }
+
+    h2 {
+      margin-top: 0;
+      text-align: center;
+      color: #00bfff;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="sidebar">
+    <h2>แมพ MIR4</h2>
+    <div id="maps-container"></div>
+  </div>
+
+  <div id="map-display">
+    🔍 คลิกแมพหลัก → เลือกแมพย่อยเพื่อดูรูปใหญ่
+  </div>
+
+  <script>
+    // แมพหลัก + path ของรูปจริง (อยู่ในโฟลเดอร์ images/)
+    const maps = {
+      "Phantasia": ["phantasia.png"],
+      "W8": [
+        "ปากั้วตัว1.png",
+        "ปากั้วตัว2.png",
+        "เหมืองร้าง3ตัว1.png",
+        "เหมืองร้าง3ตัว2.png",
+        "เหมืองร้าง3ตัว3.png"
+      ],
+      "W7": [
+        "จันทรา2.png",
+        "จันทรา3.png",
+        "คุกใต้ดิน.png"
+      ],
+      "W4": [
+        "ซาบัค.png",
+        "คลังสรรพาวุธ1.png",
+        "คลังสรรพาวุธ2.png",
+        "นักบวชโลหิต.png"
+      ],
+      "W2": [
+        "ตลาดซอชอน.png",
+        "ภูเขาจันทรา.png",
+        "ทางคตเคี้ยวทวิมรรคา.png",
+        "ราชาภูตหน้ากระทิง.png"
+      ],
+      "W5": [
+        "ทุ่งน้ำแข็งเก้ามังกร.png",
+        "วิหารภาพหลอน.png",
+        "ซากโบราณของมาร.png",
+        "ปีศาจแมงมุมเงามรณะ.png"
+      ],
+      "W3": [
+        "สุสานปีศาจวัว.png",
+        "ทุ่งหญ้าปีศาจอสรพิษ.png",
+        "รังอาร์มาโดสายัณห์.png",
+        "ผีกระดูกเหล็ก.png"
+      ],
+      "W6": [
+        "เขาวงกตบิชอน ฮังกา.png",
+        "ขาวงกตบิชอน โจกิว.png",
+        "เหมืองมาร.png",
+        "เทพตะขอบยักษ์ผู้ยิ่งใหญ่.png"
+      ],
+      "L1W1": [
+        "ซงกวาง.png",
+        "โพรุง.png"
+      ],
+      "L1W2": [
+        "ขุนพลกองทัพกบฏ.png",
+        "เจ้าแห่งระเบียบ.png"
+      ],
+      "L1W3": [
+        "กอร์โด.png",
+        "ไครัค.png"
+      ]
+    };
+
+    const mapsContainer = document.getElementById('maps-container');
+    const mapDisplay = document.getElementById('map-display');
+
+    // สร้างปุ่มแมพหลัก + แมพย่อย
+    Object.keys(maps).forEach(mainMap => {
+      const mapDiv = document.createElement('div');
+      mapDiv.className = 'map-name';
+      mapDiv.textContent = mainMap;
+
+      const submapsDiv = document.createElement('div');
+      submapsDiv.className = 'submaps';
+      submapsDiv.style.display = 'none';
+
+      maps[mainMap].forEach(filePath => {
+        const subDiv = document.createElement('div');
+        subDiv.className = 'submap-name';
+
+        const fileName = filePath.split('/').pop();
+        subDiv.textContent = fileName;
+
+        subDiv.onclick = () => {
+          mapDisplay.innerHTML = `
+            <img src="${filePath}" alt="">
+            <div class="filename">${fileName}</div>
+          `;
+        };
+
+        submapsDiv.appendChild(subDiv);
+      });
+
+      mapDiv.onclick = () => {
+        document.querySelectorAll('.submaps').forEach(div => div.style.display = 'none');
+        submapsDiv.style.display = 'block';
+      };
+
+      mapsContainer.appendChild(mapDiv);
+      mapsContainer.appendChild(submapsDiv);
+    });
+  </script>
+
+</body>
+</html>
